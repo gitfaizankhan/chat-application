@@ -22,8 +22,8 @@ app.use('/user', userRoute);
 async function syncDB(){
     try{
         // await dbConnect.sync({alter:true});
-        await dbConnect.sync({force:true});
-        // await dbConnect.sync();
+        // await dbConnect.sync({force:true});
+        await dbConnect.sync();
         app.listen(process.env.PORT, () => {
             console.log(`Server is running on http://localhost:${process.env.PORT}/`);
         });

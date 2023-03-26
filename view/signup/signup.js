@@ -1,5 +1,4 @@
 async function signup(){
-    console.log("hello")
     try{
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
@@ -11,10 +10,10 @@ async function signup(){
             mobile,
             password
         }
-        await axios.post('http://localhost:3000/user/signup', data);
+        const d = await axios.post('http://localhost:3000/user/signup', data);
         alert("User Registered Successfully");
         window.location.href = '';
     }catch(error){
-        console.log(error);
+        alert(error.response.data.msg);
     }
 }
