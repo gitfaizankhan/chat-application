@@ -1,0 +1,22 @@
+{
+  "name": "chat-application",
+  "version": "1.0.0",
+  "description": "real time chat application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitfaizankhan/chat-application.git"
+  },
+  "author": "faizan khan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gitfaizankhan/chat-application/issues"
+  },
+  "homepage": "https://github.com/gitfaizankhan/chat-application#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
