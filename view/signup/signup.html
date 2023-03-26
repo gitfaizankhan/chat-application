@@ -13,8 +13,7 @@
         <title>SignUp</title>
     </head>
     <body>
-        <section class="vh-100 bg-image" style="background-image: url('/images/background.jpg');">
-        <div class="mask d-flex align-item-center h-100 gradient-custom-3">
+        <div class="mask d-flex align-item-center vh-100 gradient-custom-3 bg-image" style="background-image: url('../images/background.jpg');">
             <div class="container h-100">
                 <div class="row d-flex justify-content-center align-item-center h-100">
                     <div class="col-12 col-md-9 col-lg-7 col-xl-6">
@@ -29,10 +28,13 @@
                                         <input type="email" id="email" class="form-control form-control-lg" required placeholder="Enter Your Email">
                                     </div>
                                     <div class="form-outline mb-4">
+                                        <input type="number" id="phone_no" class="form-control form-control-lg" required placeholder="Enter Mobile Number">
+                                    </div>
+                                    <div class="form-outline mb-4">
                                         <input type="password"  id="password" class="form-control form-control-lg" required placeholder="Enter Password">
                                     </div>
                                     <div class="d-flex justify-content-center">
-                                        <button type="button" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Sign Up</button>
+                                        <button type="button" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" onclick="signup()">Sign Up</button>
                                     </div>
                                     <p class="text-center text-muted mt-5 mb-0">
                                         Have already an account?
@@ -47,6 +49,7 @@
                 </div>
             </div>
         </div>
-        </section>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="signup.js" defer></script>
     </body>
 </html>
