@@ -12,7 +12,7 @@ async function signup(){
         }
         const d = await axios.post('http://localhost:3000/user/signup', data);
         alert("User Registered Successfully");
-        window.location.href = '';
+        window.location.href = '../login/login.html';
     }catch(error){
         alert(error.response.data.msg);
     }
