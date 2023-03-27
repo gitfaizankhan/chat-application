@@ -78,8 +78,8 @@
                             </div>
                             <div class="card-footer bg-success"  style="height: 10%; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
                                 <div class="text-muted d-flex justify-content-start align-items-center pe-3">
-                                    <input type="text" class="form-control form-control-lg" placeholder="Type your message...">
-                                    <button type="submit" class="custom-button ms-3" style="width: 25%;" onclick="send">Send</button>
+                                    <input type="text" id="msg" class="form-control form-control-lg" placeholder="Type your message...">
+                                    <button type="button" class="custom-button ms-3" style="width: 25%;" onclick="send()">Send</button>
                                 </div>
                             </div>
                         </div>       
@@ -87,5 +87,7 @@
                 </div>
             </div>
         </section>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="deshboard.js" defer></script>
     </body>
 </html>

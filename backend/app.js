@@ -5,6 +5,9 @@ const cors = require('cors');
 
 const dbConnect = require('./utils/connection');
 const userRoute = require('./routes/users');
+const userChatRoute = require('./routes/userChat');
+const User = require('./models/users');
+const Chats = require('./models/userChat')
 
 require('dotenv').config();
 
@@ -16,6 +19,13 @@ app.use(bodyParser.json());
 
 // routes
 app.use('/user', userRoute);
+app.use('/userChat', userChatRoute);
+
+
+
+// connection between tables
+User.hasMany(Chats)
+Chats.belongsTo(User)
 
 
 // Database synchronize

@@ -7,8 +7,8 @@ async function login(){
             password
         };
         const result = await axios.post('http://localhost:3000/user/login', loginData);
+        localStorage.setItem('token', result.data.token);
         alert("SuccessFully Login");
-        document.cookie = `token = ${result.data.token}`
         window.location.href = '../deshboard/deshboard.html';
     }catch(error){
         console.log(error);

@@ -1,4 +1,4 @@
-const {Sequelize, DataTypes} = require('sequelize');
+const {DataTypes} = require('sequelize');
 const dbConnect = require('../utils/connection');
 require('dotenv').config();
 
