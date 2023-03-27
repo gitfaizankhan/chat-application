@@ -22,13 +22,9 @@ function addNewUser(data){
 };
 
 function finduser(userId){
-    return new Promise(async (reject, resolve)=>{
-        const user = await userModel.findOne({ where: { email: userId } });
-        if(user){
-            resolve(user);
-        }else{
-            reject(user);
-        }
+    return new Promise((resolve)=>{
+        const user = userModel.findOne({ where: { email: userId } });
+        resolve(user);
     })
 }
 
