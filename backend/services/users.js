@@ -5,9 +5,9 @@ require('dotenv').config();
 function addNewUser(data){
     return new Promise((resolve, reject)=>{
         const salt = 5;
-        bcrypt.hash(data.password, salt, async (error, hash) => {
+        bcrypt.hash(data.password, salt, (error, hash) => {
             try{
-                const resultData = await userModel.create({
+                const resultData = userModel.create({
                     name: data.name,
                     email: data.email,
                     mobile: data.mobile,
