@@ -2,6 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const app = express();
+
+
+
 
 const dbConnect = require('./utils/connection');
 const userRoute = require('./routes/users');
@@ -11,7 +15,7 @@ const Chats = require('./models/userChat')
 
 require('dotenv').config();
 
-const app = express();
+
 
 
 app.use(cors({origin:'http://127.0.0.1:5500'}));
@@ -27,6 +31,10 @@ app.use('/userChat', userChatRoute);
 User.hasMany(Chats)
 Chats.belongsTo(User)
 
+function addData(data){
+    console.log("hello");
+    io.emit('message', data);
+}
 
 // Database synchronize
 async function syncDB(){
