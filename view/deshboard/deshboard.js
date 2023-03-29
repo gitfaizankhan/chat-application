@@ -1,27 +1,30 @@
 async function send(){
     const token = localStorage.getItem('token');
     try{
-        const msg = document.getElementById('msg').value;
-        await axios.post('http://localhost:3000/userChat/message', { msg: msg }, { headers: { 'Authorization': token } });
+        const msg = document.getElementById('msg');
+        await axios.post('http://localhost:3000/userChat/message', { msg: msg.value }, { headers: { 'Authorization': token } });
+        msg.value = '';
+        showMessage();
     }catch(error){
         console.log(error);
     }
 }
 
-
+// setInterval(() =>{
+// }, 1000);
 showMessage();
+
 async function showMessage(){
+    const scbar = document.getElementById('scbar');
+    const div = document.getElementById('userdata');
+    div.innerHTML = "";
     try{
-        const div = document.getElementById('userdata');
         const otherUser = document.getElementById('user_other');
         const token = localStorage.getItem('token');
         const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token } });
         const userId = message.data.userId;
-        console.log(message)
         for(let msg in message.data.chats){
-            console.log(message.data.chats[msg].msg)
             if (message.data.chats[msg].userId === userId){
-                console.log(msg);
                 const childDiv_1 = document.createElement('div');
                 childDiv_1.className = "d-flex flex-row justify-content-end";
                 const p = document.createElement('p');
@@ -39,6 +42,7 @@ async function showMessage(){
                 childDiv_2.appendChild(p);
                 div.appendChild(childDiv_2);
             }
+            scbar.scrollTop = scbar.scrollHeight - scbar.offsetHeight;
         }
     }catch(error){
         console.log(error);
