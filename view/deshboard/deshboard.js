@@ -9,29 +9,26 @@ async function send(){
     }
 }
 
-var socket = io();
-
-socket.on('message', addMessages);
 
 function addMessages(message) {
     console.log("hello");
 }
 
-setInterval(() =>{
-    getMessage();
-}, 1000);
+// setInterval(() =>{
+    // getMessage();
+// }, 1000);
 
 
-async function getMessage(){
-    try{
-        const otherUser = document.getElementById('user_other');
-        const token = localStorage.getItem('token');
-        const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token } });
-        showMessage(message);
-    }catch(error){
-        console.log(error);
-    }
-} 
+// async function getMessage(){
+//     try{
+//         const otherUser = document.getElementById('user_other');
+//         const token = localStorage.getItem('token');
+//         const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': [1, 2] } });
+//         showMessage(message);
+//     }catch(error){
+//         console.log(error);
+//     }
+// } 
 
 function showMessage(message){
     console.log(message);
@@ -60,4 +57,92 @@ function showMessage(message){
         }
         scbar.scrollTop = scbar.scrollHeight - scbar.offsetHeight;
     }
+}
+
+
+showUsers()
+async function showUsers(){
+    const member = await axios.get('http://localhost:3000/group/chatUsers');
+    for(let m of member.data){
+        displayMember(m);
+    }
+}
+
+function displayMember(member){
+    const ul = document.getElementById('users');
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const divMain = document.createElement('div');
+    const childDiv = document.createElement('div');
+    const userName = document.createElement('p');
+    const userId  = document.createElement('p');
+
+
+    li.className = 'p-2 mb-2 border-bottom';
+    li.style.backgroundColor = '#f0f8ff';
+    li.style.borderRadius = '10px';
+
+
+    a.className = 'd-flex justify-content-between';
+    a.style.textDecoration = 'none';
+    a.href = '#';
+
+    divMain.className = 'row d-flex flex-row';
+    divMain.style.margin = 'auto';
+
+    childDiv.className = 'col-12 pt-1';
+
+    userName.className = 'fw-bold mb-0';
+    userName.id = 'username';
+    userName.innerText = member.name;
+
+    userId.className = 'col-12 pt-1';
+    userId.id = 'userid';
+    userId.style.display = 'none';
+    console.log("member id ", member.id);
+    userId.innerText = member.id;
+
+
+    // a.addEventListener('click', async (e)=>{
+    //     console.log(e);
+    //     const username = document.getElementById('username').innerText;
+    //     const userid = document.getElementById('userid').innerText;
+    //     console.log("hrllo", username);
+    //     const token = localStorage.getItem('token');
+    //     const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': userid } });
+    //     showMessage(message);
+    // })
+    // a.addEventListener('click', async (event) => {
+        // get the clicked a element
+        // const clickedA = event.target;
+        // console.log("hello", clickedA);
+        // find the username and userid elements within the clicked a element
+        // const usernameElem = clickedA.querySelector('#username');
+        // const useridElem = clickedA.querySelector('#userid');
+        // console.log("hello", clickedA.querySelector('#userid'));
+        // get the text content of the username and userid elements
+        // const username = usernameElem.innerText;
+        // const userid = useridElem.innerText;
+
+        // your axios code here
+    // });
+
+
+    a.addEventListener('click', async (e) => {
+        e.preventDefault(); // prevent default link behavior
+        const username = e.currentTarget.querySelector('.fw-bold.mb-0').innerText;
+        const userid = e.currentTarget.querySelector('#userid').innerText;
+        const token = localStorage.getItem('token');
+        const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': userid } });
+        showMessage(message, username);
+    });
+
+    
+
+    childDiv.appendChild(userName);
+    childDiv.appendChild(userId);
+    divMain.appendChild(childDiv);
+    a.appendChild(divMain);
+    li.appendChild(a);
+    ul.appendChild(li);
 }

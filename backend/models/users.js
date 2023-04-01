@@ -2,7 +2,7 @@ const {DataTypes} = require('sequelize');
 const dbConnect = require('../utils/connection');
 require('dotenv').config();
 
-const users = dbConnect.define(process.env.DB_USER, {
+const User = dbConnect.define(process.env.DB_USER, {
     id:{
         type: DataTypes.INTEGER,
         allowNull : false,
@@ -28,4 +28,4 @@ const users = dbConnect.define(process.env.DB_USER, {
     }
 });
 
-module.exports = users;
+module.exports = User;
