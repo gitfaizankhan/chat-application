@@ -18,18 +18,6 @@ function addMessages(message) {
     // getMessage();
 // }, 1000);
 
-
-// async function getMessage(){
-//     try{
-//         const otherUser = document.getElementById('user_other');
-//         const token = localStorage.getItem('token');
-//         const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': [1, 2] } });
-//         showMessage(message);
-//     }catch(error){
-//         console.log(error);
-//     }
-// } 
-
 function showMessage(message){
     console.log(message);
     const scbar = document.getElementById('scbar');
@@ -62,7 +50,8 @@ function showMessage(message){
 
 showUsers()
 async function showUsers(){
-    const member = await axios.get('http://localhost:3000/group/chatUsers');
+    const token = localStorage.getItem('token');
+    const member = await axios.get('http://localhost:3000/group/chatUsers', { headers: { 'Authorization': token } });
     for(let m of member.data){
         displayMember(m);
     }
@@ -99,45 +88,16 @@ function displayMember(member){
     userId.className = 'col-12 pt-1';
     userId.id = 'userid';
     userId.style.display = 'none';
-    console.log("member id ", member.id);
     userId.innerText = member.id;
 
-
-    // a.addEventListener('click', async (e)=>{
-    //     console.log(e);
-    //     const username = document.getElementById('username').innerText;
-    //     const userid = document.getElementById('userid').innerText;
-    //     console.log("hrllo", username);
-    //     const token = localStorage.getItem('token');
-    //     const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': userid } });
-    //     showMessage(message);
-    // })
-    // a.addEventListener('click', async (event) => {
-        // get the clicked a element
-        // const clickedA = event.target;
-        // console.log("hello", clickedA);
-        // find the username and userid elements within the clicked a element
-        // const usernameElem = clickedA.querySelector('#username');
-        // const useridElem = clickedA.querySelector('#userid');
-        // console.log("hello", clickedA.querySelector('#userid'));
-        // get the text content of the username and userid elements
-        // const username = usernameElem.innerText;
-        // const userid = useridElem.innerText;
-
-        // your axios code here
-    // });
-
-
     a.addEventListener('click', async (e) => {
-        e.preventDefault(); // prevent default link behavior
+        e.preventDefault(); 
         const username = e.currentTarget.querySelector('.fw-bold.mb-0').innerText;
         const userid = e.currentTarget.querySelector('#userid').innerText;
         const token = localStorage.getItem('token');
         const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': userid } });
         showMessage(message, username);
-    });
-
-    
+    });   
 
     childDiv.appendChild(userName);
     childDiv.appendChild(userId);
@@ -146,3 +106,56 @@ function displayMember(member){
     li.appendChild(a);
     ul.appendChild(li);
 }
+
+const creategroupButton = document.getElementById("creategroup");
+creategroupButton.addEventListener("click", async ()=>{
+    const token = localStorage.getItem('token');
+    const alluser = await axios.get('http://localhost:3000/user/alluser', { headers: { 'Authorization': token} });
+    const checkboxes = {};
+    const tbody = document.getElementById("userselect");
+    for(let user of alluser.data){
+
+        const tr = document.createElement('tr');
+        const name = document.createElement('td');
+        const check_td = document.createElement('td');
+        const check_div = document.createElement('div');
+        const input = document.createElement("input");
+
+        check_div.className = 'form-check';
+        name.innerText = user.name;
+        input.className = 'form-check-input';
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("id", "checkButton" + user.id);
+        input.setAttribute("value", user.id);
+
+
+        check_div.appendChild(input);
+        check_td.appendChild(check_div);
+        tr.appendChild(name);
+        tr.appendChild(check_td);
+        tbody.appendChild(tr);
+        checkboxes[user.id] = input;
+    }
+    const submitgroupdata = document.getElementById("submitgroupdata");
+    submitgroupdata.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const group_name = document.getElementById('groupnameId').value;
+        const userId = [];
+        for(let i in checkboxes){
+            
+            if (checkboxes[i].checked){
+                userId.push(checkboxes[i].value);
+            }
+        }
+        groupInfo = {
+            name: group_name,
+            userId: userId
+        }
+        const token = localStorage.getItem('token');
+        await axios.post('http://localhost:3000/group/addgroup', groupInfo, { headers: { 'Authorization': token } });
+        window.location.href = './deshboard.html';
+
+    })
+
+});
+

@@ -1,7 +1,7 @@
 const userService = require('../services/users');
 const bcrypt = require('bcrypt'); 
 const jwt = require('jsonwebtoken');
-
+const User = require('../models/users');
 
 exports.signup = async (req, res, next)=>{
     try{
@@ -48,6 +48,18 @@ exports.login = async(req, res, next)=>{
         }
     }catch(error){
         res.json(error)
+        console.log(error);
+    }
+}
+
+
+exports.allUser = async (req, res, next)=>{
+    try{
+        const allUser = await User.findAll({
+            attributes: ['id', 'name']
+        });
+        res.status(200).json(allUser);
+    }catch(error){
         console.log(error);
     }
 }

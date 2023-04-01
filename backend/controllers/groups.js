@@ -11,8 +11,9 @@ exports.getgroup = async (req, res, next)=>{
 exports.addgroup = async(req, res, next)=>{
     const name = req.body.name;
     const userId = req.body.userId;
+    console.log("userId ", userId)
     const isExistGroup = await Groups.Group.findOne({ where: { name: name } });
-    if(!isExist){
+    if (!isExistGroup){
         const newGroup = await Groups.Group.create({ name: name });
         for(let id of userId){
             await Groups.User_Group.bulkCreate([{ groupId: newGroup.id, userId: id, }]);

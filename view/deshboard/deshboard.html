@@ -11,6 +11,19 @@
             crossorigin="anonymous"></script>
             <link rel="stylesheet" href="../css/style.css">
         <title>Deshboard</title>
+        <style>
+            #popup-content {
+                background-color: #fff;
+                border: 1px solid #000;
+                padding: 20px;
+                width: 300px;
+                height: 200px;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
     </head>
     <body>
         <section class="vh-100 bg-image" style="background-image: url('../images/background.jpg');">
@@ -27,24 +40,16 @@
                             <div class="card-body ">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
-                                        <div class="d-flex justify-content-between align-items-center p-3 bg-success text-white border-bottom-0"
+                                        <div class="d-flex justify-content-between align-items-center p-1 bg-success text-white border-bottom-0"
                                             style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
                                             <i class="fas fa-angle-left"></i>
                                             <p class="mb-0 fw-bold">Member</p>
+                                            <button type="button" class="custom-button" id="creategroup" style="width: 40%; height: 50px;" data-bs-toggle="modal" data-bs-target="#ModalForm">Create Group</button>
                                             <i class="fas fa-times"></i>
                                         </div>
                                         <div class="p-3" style="background-color: #c9d7e59a; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;" >
                                             <div class="overflow-auto" style="position: relative; height: 400px;">
                                                 <ul class="list-unstyled mb-0" id="users">
-                                                    <!-- <li class="p-2 border-bottom" style="background-color: #f0f8ff; border-radius: 10px;" id="li"> -->
-                                                        <!-- <a href="#!" class="d-flex justify-content-between" style="text-decoration: none;" id="users"> -->
-                                                            <!-- <div class=" row d-flex flex-row"> -->
-                                                                <!-- <div class="col-12 pt-1" id="name">
-                                                                    <p class="fw-bold mb-0">Name</p>
-                                                                </div> -->
-                                                            <!-- </div> -->
-                                                        </a>
-                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -58,9 +63,7 @@
                                         </div>
                                         <div id="scbar" class="p-3 overflow-auto" style="background-color: #c9d7e59a; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; height: 432px;" >
                                             <div>
-                                                <div id="userdata">
-                                                    <!-- username -->
-                                                    <!-- <p class="small ms-3 mb-3 rounded-3 text-muted float-end">me</p> -->
+                                                <div id="userdata">                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -82,3 +85,48 @@
         <script src="deshboard.js" defer></script>
     </body>
 </html>
+
+
+<!-- model start -->
+
+<div class="modal fade" id="ModalForm" tabindex="-1" aria-labelledby="ModalFormLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+            <div class="d-flex justify-content-between align-items-center p-3 bg-success text-white border-bottom-0" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+                <i class="fas fa-angle-left"></i>
+                <p class="mb-0 fw-bold" style="padding-right: 100px;">Create Group</p>
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <form>
+                            <div class="form-outline mb-4">
+                                <input type="text" id="groupnameId" class="form-control form-control-lg" placeholder="Enter Group Name">
+                            </div>
+                            <div class="form-outline mb-4" id="selectUser">
+                                <p class="mb-0 fw-bold bg-success text-center">Select User</p>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th>Status</th>    
+                                        </tr>
+                                    </thead>
+                                    <tbody id="userselect">
+                                        
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="text-center justify-content-center">
+                                <button type="button" class="custom-button" id="submitgroupdata">Create Group</button>
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
