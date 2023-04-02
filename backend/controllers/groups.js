@@ -1,5 +1,6 @@
 const Groups = require('../models/groups');
 const User = require('../models/users');
+const sequelize = require('sequelize');
 
 exports.getgroup = async (req, res, next)=>{
     const result = await GroupModule.findAll({
@@ -11,10 +12,11 @@ exports.getgroup = async (req, res, next)=>{
 exports.addgroup = async(req, res, next)=>{
     const name = req.body.name;
     const userId = req.body.userId;
+    const admin = req.user.email;
     console.log("userId ", userId)
     const isExistGroup = await Groups.Group.findOne({ where: { name: name } });
     if (!isExistGroup){
-        const newGroup = await Groups.Group.create({ name: name });
+        const newGroup = await Groups.Group.create({ name: name, admin: admin });
         for(let id of userId){
             await Groups.User_Group.bulkCreate([{ groupId: newGroup.id, userId: id, }]);
         }
@@ -28,12 +30,16 @@ exports.addgroup = async(req, res, next)=>{
 
 
 exports.chatUsers = async (req, res, next) => {
-    console.log("hello");
+    // console.log("hello faizan", req.user.name);
     const name = await User.findAll({
-        attributes: ['id', 'name']
+        attributes: ['id', 'name', 
+            [sequelize.literal(`CASE WHEN name = '${req.user.name || 'unknown'}' THEN 'me' ELSE 'user' END`), 'category']
+        ]
     }); 
     const group = await Groups.Group.findAll({
-        attributes: ['id', 'name']
+        attributes: ['id', 'name',
+            [sequelize.literal(`CONCAT('group')`), 'category']
+        ]
     })
     const allChatUsers = [...name, ...group];
     res.status(200).json(allChatUsers);

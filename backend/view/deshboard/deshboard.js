@@ -1,29 +1,29 @@
-async function send(){
-    const token = localStorage.getItem('token');
-    try{
-        const msg = document.getElementById('msg');
-        const newChat = await axios.post('http://localhost:3000/userChat/message', { msg: msg.value }, { headers: { 'Authorization': token } });
-        msg.value = '';
-    }catch(error){
-        console.log(error);
-    }
-}
+
+// async function send(){
+//     const token = localStorage.getItem('token');
+//     try{
+//         const msg = document.getElementById('msg');
+//         const newChat = await axios.post('http://localhost:3000/userChat/message', { msg: msg.value }, { headers: { 'Authorization': token } });
+//         msg.value = '';
+//     }catch(error){
+//         console.log(error);
+//     }
+// }
 
 
-function addMessages(message) {
+
+
+async function showMessage(message, userchat, userid, category) {
     console.log("hello");
-}
-
-// setInterval(() =>{
-    // getMessage();
-// }, 1000);
-
-function showMessage(message){
-    console.log(message);
+    
+    document.getElementById('userchat').innerText = `${userchat}`;
+    document.getElementById('userchatID').innerText = `${userid}`;
+    document.getElementById('userchatType').innerText = `${category}`;
     const scbar = document.getElementById('scbar');
     const div = document.getElementById('userdata');
     div.innerHTML = "";
     const userId = message.data.userId;
+    const token = localStorage.getItem('token');
     for (let msg in message.data.chats) {
         if (message.data.chats[msg].userId === userId) {
             const childDiv_1 = document.createElement('div');
@@ -65,7 +65,7 @@ function displayMember(member){
     const childDiv = document.createElement('div');
     const userName = document.createElement('p');
     const userId  = document.createElement('p');
-
+    const category = document.createElement('p');
 
     li.className = 'p-2 mb-2 border-bottom';
     li.style.backgroundColor = '#f0f8ff';
@@ -73,6 +73,7 @@ function displayMember(member){
 
 
     a.className = 'd-flex justify-content-between';
+    a.id = "getUsersChat"
     a.style.textDecoration = 'none';
     a.href = '#';
 
@@ -81,31 +82,56 @@ function displayMember(member){
 
     childDiv.className = 'col-12 pt-1';
 
-    userName.className = 'fw-bold mb-0';
+    userName.className = 'fw-bold mb-0 text-right';
     userName.id = 'username';
-    userName.innerText = member.name;
+
+    category.className = 'fw-bold mb-0';
+    category.id = 'category';
+    category.style.display = 'none';
+    category.innerText = member.category;
 
     userId.className = 'col-12 pt-1';
     userId.id = 'userid';
     userId.style.display = 'none';
     userId.innerText = member.id;
 
-    a.addEventListener('click', async (e) => {
-        e.preventDefault(); 
-        const username = e.currentTarget.querySelector('.fw-bold.mb-0').innerText;
-        const userid = e.currentTarget.querySelector('#userid').innerText;
-        const token = localStorage.getItem('token');
-        const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'UserId': userid } });
-        showMessage(message, username);
-    });   
-
     childDiv.appendChild(userName);
+    childDiv.appendChild(category);
     childDiv.appendChild(userId);
     divMain.appendChild(childDiv);
     a.appendChild(divMain);
     li.appendChild(a);
-    ul.appendChild(li);
+
+    if (member.category === 'me') {
+        const chatdeshboardowner = document.getElementById('chatdeshboardowner');
+        chatdeshboardowner.innerText = `${member.name}`;
+        
+    }
+    if (member.category === 'user'){
+        userName.innerText = `User : ${member.name}`;
+        ul.appendChild(li);
+    } if (member.category === 'group'){
+        userName.innerText = `Group : ${member.name}`;
+        ul.appendChild(li);
+    }
+
+    a.addEventListener('click', async (e) => {
+        e.preventDefault(); 
+        const username = e.currentTarget.querySelector('.fw-bold.mb-0').innerText;
+        const userid = e.currentTarget.querySelector('#userid').innerText;
+        const category = e.currentTarget.querySelector('#category').innerText;
+        console.log("Cate ", category);
+        const token = localStorage.getItem('token');
+        
+        setInterval(async () => {
+            const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'userid': userid, 'category': category } });
+            console.log("message ", message)
+            showMessage(message, username, userid, category);
+        }, 1000);
+        // showMessage(message, username, userid, category);
+    });   
 }
+
 
 const creategroupButton = document.getElementById("creategroup");
 creategroupButton.addEventListener("click", async ()=>{
@@ -159,3 +185,26 @@ creategroupButton.addEventListener("click", async ()=>{
 
 });
 
+const messages = document.getElementById('sendmessages');
+messages.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    try {
+        const msg = document.getElementById('msg');
+        const userchatType = document.getElementById('userchatType').innerText;
+        const userid = document.getElementById('userchatID').innerText;
+
+        if (userchatType === 'user') {
+            const newChat = await axios.post('http://localhost:3000/userChat/message', { msg: msg.value, user2: userid }, { headers: { 'Authorization': token } });
+            msg.value = '';
+
+        }
+        if (userchatType === 'group') {
+            const newChat = await axios.post('http://localhost:3000/userChat/message', { msg: msg.value, groupId: userid }, { headers: { 'Authorization': token } });
+            msg.value = '';
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+})

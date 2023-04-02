@@ -12,6 +12,10 @@ const Group = dbConnect.define(process.env.DB_GROUP, {
     name: {
         type: DataTypes.STRING,
         allowNull: false
+    }, 
+    admin:{
+        type: DataTypes.STRING,
+        allowNull: false
     }
 });
 

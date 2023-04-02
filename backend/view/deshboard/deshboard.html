@@ -35,6 +35,7 @@
                                 style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
                                 <i class="fas fa-angle-left"></i>
                                 <p class="mb-0 fw-bold">Chat Deshboard</p>
+                                <p class="mb-0 fw-bold" id="chatdeshboardowner"></p>
                                 <i class="fas fa-times"></i>
                             </div>
                             <div class="card-body ">
@@ -59,6 +60,9 @@
                                             style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
                                             <i class="fas fa-angle-left"></i>
                                             <p class="mb-0 fw-bold">Chat History</p>
+                                            <p class="mb-0 fw-bold" id="userchat"></p>
+                                            <p class="mb-0 fw-bold" id="userchatID" style="display: none;"></p>
+                                            <p class="mb-0 fw-bold" id="userchatType" style="display: none;"></p>
                                             <i class="fas fa-times"></i>
                                         </div>
                                         <div id="scbar" class="p-3 overflow-auto" style="background-color: #c9d7e59a; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; height: 432px;" >
@@ -73,7 +77,8 @@
                             <div class="card-footer bg-success"  style="height: 10%; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
                                 <div class="text-muted d-flex justify-content-start align-items-center pe-3">
                                     <input type="text" id="msg" class="form-control form-control-lg" placeholder="Type your message...">
-                                    <button type="button" class="custom-button ms-3" style="width: 25%;" onclick="send()">Send</button>
+                                    <button type="button" class="custom-button ms-3" style="width: 25%;" id="sendmessages">Send</button>
+                                    <!-- onclick="send()" -->
                                 </div>
                             </div>
                         </div>       
@@ -81,6 +86,9 @@
                 </div>
             </div>
         </section>
+        <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+            crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="deshboard.js" defer></script>
     </body>

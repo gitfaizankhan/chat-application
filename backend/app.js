@@ -1,7 +1,12 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const bodyParser = require('body-parser');
-const cors = require('cors'); 
+const cors = require('cors');
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
 
 
 
@@ -18,7 +23,7 @@ require('dotenv').config();
 
 
 
-app.use(cors({origin:'http://127.0.0.1:5500'}));
+app.use(cors());
 app.use(bodyParser.json());
 
 // routes
@@ -51,13 +56,21 @@ async function syncDB(){
         // await dbConnect.sync({alter:true});
         // await dbConnect.sync({force:true});
         await dbConnect.sync();
-        app.listen(process.env.PORT, () => {
+        server.listen(process.env.PORT, () => {
             console.log(`Server is running on http://localhost:${process.env.PORT}/`);
         });
+        const io = require('socket.io')(server);
+
+        
+
         console.log('Connection has been established successfully.');
     }catch(error){
         console.error('Unable to connect to the database:', error);
     }
 }
+io.on('connection', (socket) => {
+    console.log('A client connected');
 
+    // Perform any actions on client connection
+});
 syncDB();

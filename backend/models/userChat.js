@@ -13,7 +13,10 @@ const chats = dbConnect.define(process.env.DB_CHAT_MESSAGE, {
     msg: {
         type: Sequelize.STRING,
         allowNull: false
-    }
+    },
+    user2:{
+        type: Sequelize.INTEGER
+    } 
 });
 
 module.exports = chats;

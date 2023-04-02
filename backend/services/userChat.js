@@ -12,15 +12,31 @@ function addChat(data){
     }
 }
 
-function findAllChat(userId, anotherUser){
-    console.log(userId);
+function findAllChat(userId, usertypeId, category){
+    console.log("userId ", userId, "usertypeId", usertypeId, "category", category);
     try{
         return new Promise((resolve)=>{
-            const chats = userChat.findAll({ where: {
-                [Op.and]:{
-                    userId: [userId, anotherUser]
-                }
-            }});
+            let chats;
+            if(category === 'user'){
+                chats = userChat.findAll({
+                    where: {
+                        [Op.or]: [
+                            { userId: userId, user2: usertypeId },
+                            { userId: usertypeId, user2: userId }
+                        ]
+                    }
+                });
+            }
+            if(category === 'group'){
+                chats = userChat.findAll({
+                    where: {
+                        [Op.or]: [
+                            { userId: userId, groupId: usertypeId },
+                            { userId: usertypeId, groupId: userId }
+                        ]
+                    }
+                });
+            }
             resolve(chats);
         });
     }catch(error){
