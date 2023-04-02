@@ -1,11 +1,8 @@
 const express = require('express');
-const http = require('http');
 const socketIo = require('socket.io');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
 
 
 
@@ -45,32 +42,18 @@ User.belongsToMany(Groups.Group, { through: 'User_Group' })
 Groups.Group.hasMany(Chats)
 Chats.belongsTo(Groups.Group)
 
-function addData(data){
-    console.log("hello");
-    io.emit('message', data);
-}
-
 // Database synchronize
 async function syncDB(){
     try{
         // await dbConnect.sync({alter:true});
         // await dbConnect.sync({force:true});
         await dbConnect.sync();
-        server.listen(process.env.PORT, () => {
+        app.listen(process.env.PORT, () => {
             console.log(`Server is running on http://localhost:${process.env.PORT}/`);
         });
-        const io = require('socket.io')(server);
-
-        
-
         console.log('Connection has been established successfully.');
     }catch(error){
         console.error('Unable to connect to the database:', error);
     }
 }
-io.on('connection', (socket) => {
-    console.log('A client connected');
-
-    // Perform any actions on client connection
-});
 syncDB();

@@ -31,8 +31,8 @@ function findAllChat(userId, usertypeId, category){
                 chats = userChat.findAll({
                     where: {
                         [Op.or]: [
-                            { userId: userId, groupId: usertypeId },
-                            { userId: usertypeId, groupId: userId }
+                            { groupId: usertypeId },
+                            { groupId: userId }
                         ]
                     }
                 });

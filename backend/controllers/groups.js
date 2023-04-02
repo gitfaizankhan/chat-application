@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const Groups = require('../models/groups');
 const User = require('../models/users');
 const sequelize = require('sequelize');
@@ -31,6 +32,15 @@ exports.addgroup = async(req, res, next)=>{
 
 exports.chatUsers = async (req, res, next) => {
     // console.log("hello faizan", req.user.name);
+    console.log(req.user.id);
+    const yourGroup = await Groups.User_Group.findAll({where:{userId:req.user.id}});
+    const myg = JSON.parse(JSON.stringify(yourGroup));
+    console.log(myg);
+    const mygroup = [];
+    for(f of myg){
+        console.log(f['groupId'])
+        mygroup.push(f['groupId'])
+    }
     const name = await User.findAll({
         attributes: ['id', 'name', 
             [sequelize.literal(`CASE WHEN name = '${req.user.name || 'unknown'}' THEN 'me' ELSE 'user' END`), 'category']
@@ -39,7 +49,10 @@ exports.chatUsers = async (req, res, next) => {
     const group = await Groups.Group.findAll({
         attributes: ['id', 'name',
             [sequelize.literal(`CONCAT('group')`), 'category']
-        ]
+        ], 
+        where: {
+            id: mygroup
+        }
     })
     const allChatUsers = [...name, ...group];
     res.status(200).json(allChatUsers);
