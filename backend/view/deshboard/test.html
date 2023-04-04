@@ -1,32 +1,39 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8" />
     <title>Socket.IO Example</title>
-    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
-            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
-            crossorigin="anonymous"></script>
 </head>
 
 <body>
     <h1>Socket.IO Example</h1>
+    <ul id="messages"></ul>
+    <form id="chat-form">
+        <input id="message-input" autocomplete="off" />
+        <button>Send</button>
+    </form>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        const socket = io('http://localhost:3000');
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('message-input');
+        const messages = document.getElementById('messages');
 
-        socket.on('connect', () => {
-            console.log('Connected to server!');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const msg = input.value;
+            socket.emit('chat message', msg);
+            input.value = '';
         });
 
-        socket.on('message', (data) => {
-            console.log('Received message:', data);
+        socket.on('chat message', (msg) => {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            messages.appendChild(li);
         });
-
-        socket.on('disconnect', () => {
-            console.log('Disconnected from server!');
-        });
-
-        socket.emit('message', 'Hello, server!');
     </script>
 </body>
 

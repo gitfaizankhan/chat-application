@@ -19,7 +19,7 @@ exports.signup = async (req, res, next)=>{
 }
 
 function generateToken(id){
-    return jwt.sign({ userId: id }, process.env.TOKEN_SECRET, {expiresIn: '1200s'});
+    return jwt.sign({ userId: id }, process.env.TOKEN_SECRET);
 }
 
 exports.login = async(req, res, next)=>{

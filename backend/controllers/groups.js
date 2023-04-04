@@ -14,7 +14,6 @@ exports.addgroup = async(req, res, next)=>{
     const name = req.body.name;
     const userId = req.body.userId;
     const admin = req.user.email;
-    console.log("userId ", userId)
     const isExistGroup = await Groups.Group.findOne({ where: { name: name } });
     if (!isExistGroup){
         const newGroup = await Groups.Group.create({ name: name, admin: admin });
@@ -31,11 +30,8 @@ exports.addgroup = async(req, res, next)=>{
 
 
 exports.chatUsers = async (req, res, next) => {
-    // console.log("hello faizan", req.user.name);
-    console.log(req.user.id);
     const yourGroup = await Groups.User_Group.findAll({where:{userId:req.user.id}});
     const myg = JSON.parse(JSON.stringify(yourGroup));
-    console.log(myg);
     const mygroup = [];
     for(f of myg){
         console.log(f['groupId'])

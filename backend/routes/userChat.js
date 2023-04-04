@@ -4,10 +4,11 @@ const userAuth = require('../auth/auth');
 
 const router = express.Router();
 
-router.post('/message', userAuth, userChatController.sendMessage)
+module.exports = (io) => {
+    router.post('/message', userAuth, (req, res) =>
+        userChatController.sendMessage(io, req, res)
+    );
+    router.get('/message', userAuth, userChatController.getMessages);
 
-router.get('/message', userAuth,  userChatController.getMessages);
-
-
-
-module.exports = router;
+    return router;
+};

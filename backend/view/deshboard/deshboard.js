@@ -1,35 +1,49 @@
+const socket = io('http://localhost:3000');
+// const socket = io();
+
+// Listen to new_message event
+socket.on('new_message', (message) => {
+    showchatDiscuss(message);
+    console.log('New message received', message);
+    // Update the UI with the new message
+});
+
 function showMessage(message, userchat, userid, category) {
     document.getElementById('userchat').innerText = `${userchat}`;
     document.getElementById('userchatID').innerText = `${userid}`;
     document.getElementById('userchatType').innerText = `${category}`;
     const scbar = document.getElementById('scbar');
-    const div = document.getElementById('userdata');
-    div.innerHTML = "";
-    const userId = message.data.userId;
-    const token = localStorage.getItem('token');
-    for (let msg in message.data.chats) {
-        if (message.data.chats[msg].userId === userId) {
-            const childDiv_1 = document.createElement('div');
-            childDiv_1.className = "d-flex flex-row justify-content-end";
-            const p = document.createElement('p');
-            p.className = 'small p-2 me-3 mb-1 text-white rounded-3 bg-primary';
-            p.innerText = message.data.chats[msg].msg;
-            childDiv_1.appendChild(p);
-            div.appendChild(childDiv_1);
-        } else {
-            const childDiv_2 = document.createElement('div');
-            childDiv_2.className = "d-flex flex-row justify-content-start";
-            const p = document.createElement('p');
-            p.className = 'small p-2 ms-3 mb-1 rounded-3';
-            p.style.backgroundColor = "#f5f6f7";
-            p.innerText = message.data.chats[msg].msg;
-            childDiv_2.appendChild(p);
-            div.appendChild(childDiv_2);
-        }
-        scbar.scrollTop = scbar.scrollHeight - scbar.offsetHeight;
+    for (let msg of message.data.chats){
+        showchatDiscuss(msg);
     }
+    
 }
 
+
+function showchatDiscuss(message){
+    const div = document.getElementById('userdata');
+    const userId = message.userId;
+    // for (let msg in message.data.chats) {
+    if (message.userId === userId) {
+        const childDiv_1 = document.createElement('div');
+        childDiv_1.className = "d-flex flex-row justify-content-end";
+        const p = document.createElement('p');
+        p.className = 'small p-2 me-3 mb-1 text-white rounded-3 bg-primary';
+        p.innerText = message.msg;
+        childDiv_1.appendChild(p);
+        div.appendChild(childDiv_1);
+    } else {
+        const childDiv_2 = document.createElement('div');
+        childDiv_2.className = "d-flex flex-row justify-content-start";
+        const p = document.createElement('p');
+        p.className = 'small p-2 ms-3 mb-1 rounded-3';
+        p.style.backgroundColor = "#f5f6f7";
+        p.innerText = message.msg;
+        childDiv_2.appendChild(p);
+        div.appendChild(childDiv_2);
+    }
+    scbar.scrollTop = scbar.scrollHeight - scbar.offsetHeight;
+}
 
 showUsers()
 async function showUsers(){
@@ -43,7 +57,6 @@ async function showUsers(){
 }
 
 function displayMember(member){
-    // document.getElementById('users').innerHTML = '';
     const ul = document.getElementById('users');
     const li = document.createElement('li');
     const a = document.createElement('a');
@@ -109,23 +122,15 @@ function displayMember(member){
         const category = e.currentTarget.querySelector('#category').innerText;
         const token = localStorage.getItem('token');
         const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'userid': userid, 'category': category } });
-        console.log("message ", message)
+        const div = document.getElementById('userdata');
+        div.innerHTML = "";
         showMessage(message, username, userid, category);
-        setInterval(async ()=>{
-            liveChatMsg();
-        }, 1000);
+        // setInterval(async ()=>{
+        //     liveChatMsg();
+        // }, 1000);
     });
 }
 
-
-async function liveChatMsg(){
-    const username = document.getElementById('userchat').innerText;
-    const userid = document.getElementById('userchatID').innerText;
-    const category = document.getElementById('userchatType').innerText;
-    const token = localStorage.getItem('token');
-    const message = await axios.get('http://localhost:3000/userChat/message', { headers: { 'Authorization': token, 'userid': userid, 'category': category } });
-    showMessage(message, username, userid, category);
-}
 
 const creategroupButton = document.getElementById("creategroup");
 creategroupButton.addEventListener("click", async ()=>{
@@ -174,8 +179,6 @@ creategroupButton.addEventListener("click", async ()=>{
         const token = localStorage.getItem('token');
         await axios.post('http://localhost:3000/group/addgroup', groupInfo, { headers: { 'Authorization': token } });
         const showUser = setInterval(showUsers(), 1000);
-        clearInterval(showUser);
-        // window.location.href = './deshboard.html';
     })
 
 });
