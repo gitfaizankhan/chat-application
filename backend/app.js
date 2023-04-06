@@ -55,6 +55,7 @@ Chats.belongsTo(Groups.Group)
 // Database synchronize
 async function syncDB() {
     try {
+        // dbConnect.sync({ force: true })
         await dbConnect.sync();
         console.log('Connection has been established successfully.');
     } catch (error) {

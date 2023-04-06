@@ -30,12 +30,17 @@ exports.addgroup = async(req, res, next)=>{
 
 
 exports.chatUsers = async (req, res, next) => {
-    const yourGroup = await Groups.User_Group.findAll({where:{userId:req.user.id}});
-    const myg = JSON.parse(JSON.stringify(yourGroup));
+    const myGroupsID = await Groups.User_Group.findAll(
+        { where:
+            { 
+                userId: req.user.id 
+            }
+        }
+    );
+    const mgID = JSON.parse(JSON.stringify(myGroupsID));
     const mygroup = [];
-    for(f of myg){
-        console.log(f['groupId'])
-        mygroup.push(f['groupId'])
+    for (id of mgID){
+        mygroup.push(id['groupId'])
     }
     const name = await User.findAll({
         attributes: ['id', 'name', 

@@ -24,7 +24,10 @@ function findAllChat(userId, usertypeId, category){
                             { userId: userId, user2: usertypeId },
                             { userId: usertypeId, user2: userId }
                         ]
-                    }
+                    },
+                    order: [
+                        ['createdAt', 'ASC']
+                    ]
                 });
             }
             if(category === 'group'){

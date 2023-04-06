@@ -1,18 +1,17 @@
 const socket = io('http://localhost:3000');
-// const socket = io();
 
-// Listen to new_message event
+
 socket.on('new_message', (message) => {
-    showchatDiscuss(message);
-    console.log('New message received', message);
-    // Update the UI with the new message
+    showchatDiscuss(message.chats);
 });
 
 function showMessage(message, userchat, userid, category) {
     document.getElementById('userchat').innerText = `${userchat}`;
     document.getElementById('userchatID').innerText = `${userid}`;
     document.getElementById('userchatType').innerText = `${category}`;
-    const scbar = document.getElementById('scbar');
+    const userdeshboardID = document.getElementById('userchatID').innerText;
+    const scroll_bar = document.getElementById('scbar');
+    console.log("message.data.chats ", message.data.chats);
     for (let msg of message.data.chats){
         showchatDiscuss(msg);
     }
@@ -20,11 +19,10 @@ function showMessage(message, userchat, userid, category) {
 }
 
 
-function showchatDiscuss(message){
+function showchatDiscuss(message, userchatID){
     const div = document.getElementById('userdata');
-    const userId = message.userId;
-    // for (let msg in message.data.chats) {
-    if (message.userId === userId) {
+    const userdeshboardID = document.getElementById('chatdeshboardownerID').innerText;
+    if (message.userId == userdeshboardID) {
         const childDiv_1 = document.createElement('div');
         childDiv_1.className = "d-flex flex-row justify-content-end";
         const p = document.createElement('p');
@@ -47,7 +45,6 @@ function showchatDiscuss(message){
 
 showUsers()
 async function showUsers(){
-    console.log("hello Added")
     const token = localStorage.getItem('token');
     const member = await axios.get('http://localhost:3000/group/chatUsers', { headers: { 'Authorization': token } });
     document.getElementById('users').innerHTML = '';
@@ -100,9 +97,10 @@ function displayMember(member){
     divMain.appendChild(childDiv);
     a.appendChild(divMain);
     li.appendChild(a);
-
+    
     if (member.category === 'me') {
         const chatdeshboardowner = document.getElementById('chatdeshboardowner');
+        document.getElementById('chatdeshboardownerID').innerText = `${member.id}`;
         chatdeshboardowner.innerText = `${member.name}`;
         
     }
@@ -125,9 +123,6 @@ function displayMember(member){
         const div = document.getElementById('userdata');
         div.innerHTML = "";
         showMessage(message, username, userid, category);
-        // setInterval(async ()=>{
-        //     liveChatMsg();
-        // }, 1000);
     });
 }
 
@@ -193,12 +188,12 @@ messages.addEventListener('click', async (e) => {
         const userid = document.getElementById('userchatID').innerText;
 
         if (userchatType === 'user') {
-            const newChat = await axios.post('http://localhost:3000/userChat/message', { msg: msg.value, user2: userid }, { headers: { 'Authorization': token } });
+            await axios.post('http://localhost:3000/userChat/message', { msg: msg.value, user2: userid }, { headers: { 'Authorization': token } });
             msg.value = '';
 
         }
         if (userchatType === 'group') {
-            const newChat = await axios.post('http://localhost:3000/userChat/message', { msg: msg.value, groupId: userid }, { headers: { 'Authorization': token } });
+            await axios.post('http://localhost:3000/userChat/message', { msg: msg.value, groupId: userid }, { headers: { 'Authorization': token } });
             msg.value = '';
         }
 
