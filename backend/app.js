@@ -47,6 +47,11 @@ Chats.belongsTo(User)
 Groups.Group.belongsToMany(User, { through: 'User_Group' })
 User.belongsToMany(Groups.Group, { through: 'User_Group' })
 
+
+// 
+Groups.Group.belongsToMany(User, { through: 'GroupAdmin' })
+User.belongsToMany(Groups.Group, { through: 'GroupAdmin' })
+
 Groups.Group.hasMany(Chats)
 Chats.belongsTo(Groups.Group)
 

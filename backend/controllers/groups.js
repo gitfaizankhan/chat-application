@@ -11,14 +11,20 @@ exports.getgroup = async (req, res, next)=>{
 }
 
 exports.addgroup = async(req, res, next)=>{
+    console.log(req.body);
     const name = req.body.name;
     const userId = req.body.userId;
-    const admin = req.user.email;
+    const adminId = req.body.admin;
     const isExistGroup = await Groups.Group.findOne({ where: { name: name } });
     if (!isExistGroup){
-        const newGroup = await Groups.Group.create({ name: name, admin: admin });
+        const newGroup = await Groups.Group.create({ name: name });
         for(let id of userId){
-            await Groups.User_Group.bulkCreate([{ groupId: newGroup.id, userId: id, }]);
+            await Groups.User_Group.bulkCreate([{ groupId: newGroup.id, userId: id }]);
+        }
+        console.log(userId);
+        console.log(adminId);
+        for (let admin of adminId){
+            await Groups.GroupAdmin.bulkCreate([{ groupId: newGroup.id, userId: admin }])
         }
     }else{
         for (let id of userId) {

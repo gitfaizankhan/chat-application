@@ -12,18 +12,16 @@ const Group = dbConnect.define(process.env.DB_GROUP, {
     name: {
         type: DataTypes.STRING,
         allowNull: false
-    }, 
-    admin:{
-        type: DataTypes.STRING,
-        allowNull: false
-    }
+    } 
 });
 
 
+const GroupAdmin = dbConnect.define('GroupAdmin', {}, { timestamps: false });
 const User_Group = dbConnect.define('User_Group', {}, { timestamps: false });
 
 module.exports = {
     Group,
     User_Group,
+    GroupAdmin
 }
 

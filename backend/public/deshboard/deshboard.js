@@ -132,6 +132,7 @@ creategroupButton.addEventListener("click", async ()=>{
     const token = localStorage.getItem('token');
     const alluser = await axios.get('http://localhost:3000/user/alluser', { headers: { 'Authorization': token} });
     const checkboxes = {};
+    const groupAdmin = {};
     const tbody = document.getElementById("userselect");
     for(let user of alluser.data){
 
@@ -141,6 +142,10 @@ creategroupButton.addEventListener("click", async ()=>{
         const check_div = document.createElement('div');
         const input = document.createElement("input");
 
+        const check_admin_td = document.createElement('td');
+        const check_admin_div = document.createElement('div');
+        const check_admin_input = document.createElement("input");
+
         check_div.className = 'form-check';
         name.innerText = user.name;
         input.className = 'form-check-input';
@@ -148,32 +153,50 @@ creategroupButton.addEventListener("click", async ()=>{
         input.setAttribute("id", "checkButton" + user.id);
         input.setAttribute("value", user.id);
 
+        check_admin_div.className = 'form-check';
+        check_admin_input.className = 'form-check-input';
+        check_admin_input.setAttribute("type", "checkbox");
+        check_admin_input.setAttribute("id", "checkButton" + user.id);
+        check_admin_input.setAttribute("value", user.id);
+
 
         check_div.appendChild(input);
         check_td.appendChild(check_div);
+        check_admin_div.appendChild(check_admin_input);
+        check_admin_td.appendChild(check_admin_div);
         tr.appendChild(name);
         tr.appendChild(check_td);
+        tr.appendChild(check_admin_td);
         tbody.appendChild(tr);
         checkboxes[user.id] = input;
+        groupAdmin[user.id] = check_admin_input;
     }
     const submitgroupdata = document.getElementById("submitgroupdata");
     submitgroupdata.addEventListener('click', async (e) => {
         e.preventDefault();
         const group_name = document.getElementById('groupnameId').value;
         const userId = [];
+        const admin = [];
         for(let i in checkboxes){
             
             if (checkboxes[i].checked){
                 userId.push(checkboxes[i].value);
             }
         }
+        for (let i in groupAdmin) {
+
+            if (groupAdmin[i].checked) {
+                admin.push(groupAdmin[i].value);
+            }
+        }
         groupInfo = {
             name: group_name,
-            userId: userId
+            userId: userId, 
+            admin: admin
         }
         const token = localStorage.getItem('token');
         await axios.post('http://localhost:3000/group/addgroup', groupInfo, { headers: { 'Authorization': token } });
-        const showUser = setInterval(showUsers(), 1000);
+        // const showUser = setInterval(showUsers(), 1000);
     })
 
 });
