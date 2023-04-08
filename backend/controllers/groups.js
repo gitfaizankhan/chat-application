@@ -11,7 +11,6 @@ exports.getgroup = async (req, res, next)=>{
 }
 
 exports.addgroup = async(req, res, next)=>{
-    console.log(req.body);
     const name = req.body.name;
     const userId = req.body.userId;
     const adminId = req.body.admin;
@@ -21,8 +20,6 @@ exports.addgroup = async(req, res, next)=>{
         for(let id of userId){
             await Groups.User_Group.bulkCreate([{ groupId: newGroup.id, userId: id }]);
         }
-        console.log(userId);
-        console.log(adminId);
         for (let admin of adminId){
             await Groups.GroupAdmin.bulkCreate([{ groupId: newGroup.id, userId: admin }])
         }
@@ -31,6 +28,8 @@ exports.addgroup = async(req, res, next)=>{
             await Groups.User_Group.bulkCreate([{ groupId: isExistGroup.id, userId: id, }]);
         }
     }
+
+    
     res.status(200).json({ success: true });
 }
 

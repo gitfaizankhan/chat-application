@@ -129,11 +129,14 @@ function displayMember(member){
 
 const creategroupButton = document.getElementById("creategroup");
 creategroupButton.addEventListener("click", async ()=>{
+    console.log("creategroupButton ", creategroupButton)
+    creategroupButton.innerText = '';
     const token = localStorage.getItem('token');
     const alluser = await axios.get('http://localhost:3000/user/alluser', { headers: { 'Authorization': token} });
     const checkboxes = {};
     const groupAdmin = {};
     const tbody = document.getElementById("userselect");
+    tbody.innerHTML = '';
     for(let user of alluser.data){
 
         const tr = document.createElement('tr');
@@ -145,6 +148,7 @@ creategroupButton.addEventListener("click", async ()=>{
         const check_admin_td = document.createElement('td');
         const check_admin_div = document.createElement('div');
         const check_admin_input = document.createElement("input");
+        check_admin_input.setAttribute("disabled", true);
 
         check_div.className = 'form-check';
         name.innerText = user.name;
@@ -170,6 +174,15 @@ creategroupButton.addEventListener("click", async ()=>{
         tbody.appendChild(tr);
         checkboxes[user.id] = input;
         groupAdmin[user.id] = check_admin_input;
+
+        input.addEventListener('change', () => {
+            if (input.checked) {
+                check_admin_input.disabled = false;
+            } else {
+                check_admin_input.disabled = true;
+                check_admin_input.checked = false; // Uncheck the admin checkbox
+            }
+        });
     }
     const submitgroupdata = document.getElementById("submitgroupdata");
     submitgroupdata.addEventListener('click', async (e) => {
